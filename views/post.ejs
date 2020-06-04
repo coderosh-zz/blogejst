@@ -1,0 +1,83 @@
+<%- include('./includes/header.ejs') %>
+<style>
+    .blog-title {
+        margin: 10px 0;
+    }
+
+    .blog-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0;
+    }
+
+    .blog-info-author {
+        display: flex;
+        align-items: center;
+    }
+
+    .blog-author-img {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .blog-author-img img {
+        width: 50px
+    }
+
+    .blog-content {
+        margin: 20px 0;
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    .buttons button,
+    .buttons a {
+        margin-top: 5px;
+        padding: 0px 10px;
+        border: 1px solid #888;
+        color: #111111;
+        display: inline-block;
+        margin-right: 10px;
+        background-color: #f4f4f4;
+        line-height: 30px;
+        font-size: 16px;
+    }
+</style>
+
+<div class="container">
+    <div class="buttons">
+        <a href="/edit/<%= post._id %>">Edit</a>
+        <form action="/delete/<%= post._id %>" method="POST">
+            <button class="delete">Delete</button>
+        </form>
+    </div>
+    <div class="blog-title">
+        <h1><%= post.title %></h1>
+    </div>
+    <div class="blog-info">
+        <div class="blog-info-author">
+            <div class="blog-author-img">
+                <img src="<%= post.author.avatar %>" alt="post_author">
+            </div>
+            <div class="blog-author-name">
+                <%= post.author.name %>
+            </div>
+        </div>
+        <div class="blof-info-date">
+            <%= post.createdAt.toDateString() %>
+        </div>
+    </div>
+    <hr>
+    <hr>
+    <div class="blog-content"><%- post.html %></div>
+</div>
+
+
+<%- include('./includes/footer.ejs') %>

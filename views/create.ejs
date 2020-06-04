@@ -1,0 +1,52 @@
+<%- include('./includes/header.ejs') %>
+
+<link rel="stylesheet" href="/css/simplemde.min.css">
+<script src="/js/simplemde.min.js"></script>
+
+
+<style>
+    .form-title {
+        margin-top: 30px;
+    }
+
+    .form-submit {
+        margin-bottom: 30px;
+    }
+
+    .editor-toolbar {
+        background-color: #fff;
+    }
+</style>
+
+<div class="container">
+    <form method="POST" action="<%= typeof editing === "undefined" ? "/create" : `/edit/${id}` %>">
+        <div class="form-title"><%= typeof editing === "undefined" ? "Create" : "Edit" %> Post</div>
+        <div class="form-control">
+            <label for="title">Title</label>
+            <input type="text" value="<%= oldValues.title %>" name="title" id="title" autocomplete="off">
+            <%- errors.title && `<span class="error-text">${errors.title}</span>` %>
+        </div>
+        <div class="form-control">
+            <label for="description">Description</label>
+            <input type="text" value="<%= oldValues.description %>" name="description" id="description"
+                autocomplete="off">
+            <%- errors.description && `<span class="error-text">${errors.description}</span>` %>
+        </div>
+        <div class="form-control">
+            <label for="body">Body</label>
+            <textarea name="body" id="body" cols="30" rows="10"><%= oldValues.body %></textarea>
+            <%- errors.body && `<span class="error-text">${errors.body}</span>` %>
+        </div>
+        <button type="submit" class="form-submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById("body"),
+        spellChecker: false,
+        status: false,
+    });
+</script>
+
+<%- include('./includes/footer.ejs') %>

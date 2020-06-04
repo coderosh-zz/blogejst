@@ -10,15 +10,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Quicksand';
 }
 
 body {
   background-color: #d0c3c1;
+  font-family: 'Poppins', sans-serif;
 }
 
-ul {
-  list-style: none;
+input,
+textarea,
+button {
+  font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -28,7 +30,7 @@ a {
 
 .container {
   width: 90%;
-  max-width: 1100px;
+  max-width: 750px;
   margin: auto;
 }
 
@@ -38,6 +40,7 @@ a {
 
 #navbar .logo {
   color: #d0c3c1;
+  text-transform: uppercase;
 }
 
 #navbar .container {
@@ -49,10 +52,15 @@ a {
 
 #nav-items {
   display: flex;
+  list-style: none;
 }
 
 .nav-item a {
   padding: 10px;
+}
+
+.nav-item a:hover {
+  background: #0d1110;
 }
 
 .centered {
@@ -81,12 +89,17 @@ a {
   margin: 10px 0;
 }
 
-.form-control input {
+.form-control input,
+.form-control textarea {
   display: block;
   width: 100%;
-  padding: 7px 3px;
+  padding: 7px 5px;
   border: none;
   margin-top: 2px;
+}
+
+.form-control input:disabled {
+  color: #444;
 }
 
 input:focus {
@@ -111,4 +124,53 @@ input:focus {
 .error-text {
   color: rgb(117, 8, 8);
   font-size: 13px;
+}
+
+.blog-items a {
+  color: #0d1110;
+}
+
+.blog-item {
+  padding: 5px 20px;
+  border: 1px solid #43241a;
+  margin: 15px 0;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.blog-item-title {
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+.blog-item-date-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blog-item-date-author span {
+  height: 25px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  color: rgb(66, 65, 65);
+  font-size: 13px;
+}
+
+.blog-item-date-author img {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.blog-item-description {
+  margin-top: 10px;
+  padding-top: 10px;
+  color: #4e4c4a;
+}
+
+.blog-item:hover {
+  background: #44261c44;
 }

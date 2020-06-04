@@ -5,17 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="/css/prism.css">
+    <title><%= pageTitle %> | Blogejst</title>
 </head>
 
 <body>
 
     <nav id="navbar">
         <div class="container">
-            <div class="logo"><a href="/">Blogest</a></div>
+            <div class="logo"><a href="/">Blogejst</a></div>
             <ul id="nav-items">
+                <% if (!isAuthenticated) { %>
                 <li class="nav-item"><a href="/auth/login">Login</a></li>
                 <li class="nav-item"><a href="/auth/signup">Signup</a></li>
+                <% }else { %>
+                <li class="nav-item"><a href="/create">Create</a></li>
+                <% } %>
             </ul>
         </div>
     </nav>

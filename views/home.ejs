@@ -1,0 +1,24 @@
+<%- include('./includes/header.ejs') %>
+
+
+<div class="container">
+    <div class="blog-items">
+        <% posts.forEach(post => { %>
+        <a href="/@<%= post.author.username %>/<%= post.slug %>">
+            <div class="blog-item">
+                <div class="blog-item-title"><%= post.title %> </div>
+                <div class="blog-item-date-author">
+                    <span>
+                        <img src="<%= post.author.avatar %>" alt="user_gravatar">
+                        <%= post.author.name %>
+                    </span>
+                    <span><%= post.createdAt.toDateString() %> </span>
+                </div>
+                <div class="blog-item-description"><%= post.description %></div>
+            </div>
+        </a>
+        <% }) %>
+    </div>
+</div>
+
+<%- include('./includes/footer.ejs') %>

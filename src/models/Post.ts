@@ -9,9 +9,10 @@ const dompurify = createDOMPurify(window)
 interface IPost extends Document {
   title: string
   body: string
+  description: string
   slug: string
   html: string
-  author: Schema.Types.ObjectId
+  author: any
 }
 
 const postSchema = new Schema(
@@ -35,7 +36,8 @@ const postSchema = new Schema(
       type: String,
     },
     author: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },
@@ -46,7 +48,7 @@ const postSchema = new Schema(
 
 postSchema.pre('validate', function (this: IPost, next: HookNextFunction) {
   if (this.body) {
-    this.html = dompurify.sanitize(marked(this.body))
+    this.html = dompurify.sanitize(marked(this.body, { breaks: true }))
   }
   next()
 })

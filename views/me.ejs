@@ -1,0 +1,75 @@
+<%- include('./includes/header.ejs') %>
+
+<style>
+    form {
+        margin: 30px 0;
+    }
+
+    .gravatar-image {
+        height: 200px;
+        width: 200px;
+        overflow: hidden;
+        margin: auto;
+        border-radius: 50%;
+        border: 3px solid brown;
+    }
+
+    .gravatar-image img {
+        width: 200px;
+        height: 200px;
+    }
+</style>
+
+<div class="container">
+    <button id="edit" style="padding: 3px 10px;">Edit</button>
+    <form method="POST">
+        <div class="gravatar-image">
+            <img src="<%= user.avatar %>" alt="Avatar">
+        </div>
+        <div class="form-control">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" autocomplete="off" value="<%= user.name %>" spellcheck="false"
+                disabled>
+            <%- errors.name && `<span class="error-text">${errors.name}</span>` %>
+        </div>
+        <div class="form-control">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" autocomplete="off" value="<%= user.username %>"
+                spellcheck="false" disabled>
+            <%- errors.username && `<span class="error-text">${errors.username}</span>` %>
+        </div>
+        <button type="submit" class="form-submit" style="display: none;">Submit</button>
+    </form>
+
+    <div class="form-title">Your Posts</div>
+    <div class="blog-items">
+        <% posts.forEach(post => { %>
+        <a href="/@<%= post.author.username %>/<%= post.slug %>">
+            <div class="blog-item">
+                <div class="blog-item-title"><%= post.title %> </div>
+                <div class="blog-item-date-author">
+                    <span>
+                        <img src="<%= post.author.avatar %>" alt="user_gravatar">
+                        <%= post.author.name %>
+                    </span>
+                    <span><%= post.createdAt.toDateString() %> </span>
+                </div>
+                <div class="blog-item-description"><%= post.description %></div>
+            </div>
+        </a>
+        <% }) %>
+    </div>
+</div>
+
+<script>
+    document.querySelector('#edit').addEventListener('click', e => {
+        e.preventDefault()
+        document.querySelectorAll('input').forEach(input => {
+            input.toggleAttribute('disabled')
+        })
+        const formSubmit = document.querySelector('.form-submit')
+        formSubmit.style.display = formSubmit.style.display === 'block' ? 'none' : 'block'
+    })
+</script>
+
+<%- include('./includes/footer.ejs') %>
