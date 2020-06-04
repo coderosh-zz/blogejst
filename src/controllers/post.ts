@@ -135,13 +135,19 @@ const postCreatePost = async (req: Request, res: Response): Promise<void> => {
         },
       })
     }
-    await Post.create({
+    const createdPost = await Post.create({
       title,
       body,
       description,
       slug: titleSlug,
       author: req.session!.user._id,
     })
+
+    const author = await User.findById(req.session!.user._id)
+
+    author!.posts.push(createdPost.id)
+    await author!.save()
+
     res.redirect(`/@${req.session!.user.username}/${titleSlug}`)
   } catch (e) {
     res.redirect('/')
@@ -222,8 +228,15 @@ const deletePost = async (req: Request, res: Response): Promise<void> => {
 
     await Post.deleteOne({ _id: req.params.id })
 
+    const author = await User.findById(req.session!.user._id)
+
+    author!.posts = author!.posts.filter((post) => post != req.params.id)
+
+    await author!.save()
+
     res.redirect('/me')
   } catch (e) {
+    console.log(e.message)
     res.redirect('/')
   }
 }

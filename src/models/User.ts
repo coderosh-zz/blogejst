@@ -8,7 +8,7 @@ interface IUser extends Document {
   username: string
   password: string
   avatar: string
-  posts: [any]
+  posts: any[]
 }
 
 const userSchema = new Schema(

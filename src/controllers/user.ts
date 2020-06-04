@@ -52,4 +52,23 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export { updateUser }
+const getUserPosts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const username = req.params.username.substr(1)
+
+    const user = await User.findOne({ username }).populate('posts')
+
+    if (!user) {
+      return res.redirect('/')
+    }
+
+    res.render('userPost', {
+      pageTitle: '@' + user.username,
+      userPost: user,
+    })
+  } catch (e) {
+    res.redirect('/')
+  }
+}
+
+export { updateUser, getUserPosts }

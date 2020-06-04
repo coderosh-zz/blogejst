@@ -53,14 +53,24 @@ a {
 #nav-items {
   display: flex;
   list-style: none;
+  align-items: center;
 }
 
-.nav-item a {
+.nav-item a,
+.nav-item button {
   padding: 10px;
+  background: none;
+  font-size: 16px;
+  border: none;
+  display: inline-block;
+  line-height: 16px;
+  color: #fff;
 }
 
-.nav-item a:hover {
+.nav-item a:hover,
+.nav-item button:hover {
   background: #0d1110;
+  cursor: pointer;
 }
 
 .centered {
@@ -71,7 +81,7 @@ a {
 }
 
 .auth-form {
-  max-width: 300px;
+  max-width: 350px;
   margin: auto;
   background-color: #93806e;
   padding: 20px;

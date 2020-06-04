@@ -5,6 +5,7 @@ import session from 'express-session'
 import connectDB from './config/db'
 import authRouter from './routes/auth'
 import postRouter from './routes/post'
+import userRouter from './routes/user'
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 app.use('/auth', authRouter)
 app.use(postRouter)
+app.use(userRouter)
 
 const PORT = process.env.PORT || 4000
 connectDB().then(() => {

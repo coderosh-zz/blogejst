@@ -14,6 +14,7 @@
     .blog-info-author {
         display: flex;
         align-items: center;
+        color: #1d1c1c;
     }
 
     .blog-author-img {
@@ -30,6 +31,22 @@
 
     .blog-content {
         margin: 20px 0;
+        overflow-x: hidden;
+    }
+
+    .blog-content a {
+        color: brown;
+        text-decoration: underline;
+    }
+
+    .blog-content img {
+        max-height: 400px;
+    }
+
+    blockquote {
+        background: #af7c7cc0;
+        border-left: 5px solid brown;
+        padding: 15px 10px;
     }
 
     .buttons {
@@ -52,24 +69,28 @@
 </style>
 
 <div class="container">
+    <% if (isAuthenticated && user._id == post.author._id) { %>
     <div class="buttons">
         <a href="/edit/<%= post._id %>">Edit</a>
         <form action="/delete/<%= post._id %>" method="POST">
             <button class="delete">Delete</button>
         </form>
     </div>
+    <% } %>
     <div class="blog-title">
         <h1><%= post.title %></h1>
     </div>
     <div class="blog-info">
-        <div class="blog-info-author">
-            <div class="blog-author-img">
-                <img src="<%= post.author.avatar %>" alt="post_author">
+        <a href="/@<%= post.author.username %> ">
+            <div class="blog-info-author">
+                <div class="blog-author-img">
+                    <img src="<%= post.author.avatar %>" alt="post_author">
+                </div>
+                <div class="blog-author-name">
+                    <%= post.author.name %>
+                </div>
             </div>
-            <div class="blog-author-name">
-                <%= post.author.name %>
-            </div>
-        </div>
+        </a>
         <div class="blof-info-date">
             <%= post.createdAt.toDateString() %>
         </div>

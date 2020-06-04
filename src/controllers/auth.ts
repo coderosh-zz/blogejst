@@ -138,4 +138,10 @@ const postLogin = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export { getSignup, postSignup, getLogin, postLogin }
+const logout = (req: Request, res: Response): void => {
+  req.session!.destroy(() => {
+    res.redirect('/')
+  })
+}
+
+export { getSignup, postSignup, getLogin, postLogin, logout }

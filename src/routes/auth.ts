@@ -1,6 +1,13 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
-import { getLogin, postLogin, getSignup, postSignup } from '../controllers/auth'
+import {
+  getLogin,
+  postLogin,
+  getSignup,
+  postSignup,
+  logout,
+} from '../controllers/auth'
+import isAuth from '../middlewares/isAuth'
 
 const router = Router()
 
@@ -40,5 +47,7 @@ router
     ],
     postSignup
   )
+
+router.route('/logout').post(isAuth, logout)
 
 export default router
