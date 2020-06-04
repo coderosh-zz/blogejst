@@ -9,7 +9,7 @@ const connectionOptions: ConnectionOptions = {
 const mongoURI =
   process.env.MONGO_URI || 'mongodb://localhost:27017/nodeejsblog'
 
-const connectDb = async () => {
+const connectDb = async (): Promise<void> => {
   const con = await mongoose.connect(mongoURI, connectionOptions)
   console.log(`MongoDB Connected: ${con.connection.host}`)
 }

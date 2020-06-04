@@ -1,0 +1,34 @@
+<%- include('../includes/header.ejs') %>
+
+
+<div class="container centered">
+    <div class="auth-form">
+        <div class="form-title">SIGNUP</div>
+        <form method="POST">
+            <div class="form-control">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="<%= oldValue.name  %>" autocomplete="off">
+                <%- errors.name && `<span class="error-text">${errors.name}</span>` %>
+            </div>
+            <div class="form-control">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="<%= oldValue.email %>" autocomplete="off">
+                <%- errors.email && `<span class="error-text">${errors.email}</span>` %>
+            </div>
+            <div class="form-control">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="<%= oldValue.password %>">
+                <%- errors.password && `<span class="error-text">${errors.password}</span>` %>
+            </div>
+            <div class="form-control">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" id="confirmPassword"
+                    value="<%= oldValue.confirmPassword %>">
+                <%- errors.confirmPassword && `<span class="error-text">${errors.confirmPassword}</span>` %>
+            </div>
+            <button class="form-submit" type="submit">SIGNUP</button>
+        </form>
+    </div>
+</div>
+
+<%- include('../includes/footer.ejs') %>

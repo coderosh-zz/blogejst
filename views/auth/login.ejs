@@ -1,0 +1,24 @@
+<%- include('../includes/header.ejs') %>
+
+
+<div class="container centered">
+    <div class="auth-form">
+        <div class="form-title">LOGIN</div>
+        <form method="POST">
+            <div class="form-control">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="<%= oldValue.email %>" autocomplete="off">
+                <%- errors.email && `<span class="error-text">${errors.email}</span>` %>
+            </div>
+            <div class="form-control">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="<%= oldValue.password %>"
+                    autocomplete="off">
+                <%- errors.password && `<span class="error-text">${errors.password}</span>` %>
+            </div>
+            <button class="form-submit" type="submit">LOGIN</button>
+        </form>
+    </div>
+</div>
+
+<%- include('../includes/footer.ejs') %>
