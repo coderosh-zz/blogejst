@@ -8,12 +8,17 @@
 - Typescript
 - Markdown
 
-![Signup](/signup.png)
+**Signup**
+![Signup](/screenshots/signup.png)
 
-![Home Page](/home.png)
+**Home**
+![Home Page](/screenshots/home.png)
 
-![Create](/create.png)
+**Create Post**
+![Create](/screenshots/create.png)
 
-![Blog](/blog.png)
+**Post**
+![Blog](/screenshots/blog.png)
 
-![Profile](/profile.png)
+**Profile**
+![Profile](/screenshots/profile.png)
