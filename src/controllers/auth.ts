@@ -1,8 +1,19 @@
+import url from 'url'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import User from '../models/User'
 import errsToObj from '../utils/errstoobj'
 import { hash, compare } from 'bcryptjs'
+import sendMail from '../utils/mail'
+import mailTemplate from '../utils/template'
+import { createToken, verifyToken } from '../utils/jwt'
+
+const siteUrl = (req: Request) => {
+  return url.format({
+    protocol: req.protocol,
+    host: req.get('host'),
+  })
+}
 
 const getSignup = (req: Request, res: Response): void => {
   res.render('auth/signup', {
@@ -67,8 +78,19 @@ const postSignup = async (req: Request, res: Response): Promise<void> => {
 
     await User.create({ name, email, password: hashedPassword })
 
-    res.redirect('/auth/login')
+    res.redirect('/auth/verify')
+
+    await sendMail({
+      to: email,
+      subject: 'Verify your email address',
+      html: mailTemplate({
+        text: 'Please verify your email',
+        button: 'VERIFY',
+        link: siteUrl(req) + `/auth/verify/${createToken(email)}`,
+      }),
+    })
   } catch (e) {
+    console.log(e.message)
     res.redirect('/auth/signup')
   }
 }
@@ -128,6 +150,17 @@ const postLogin = async (req: Request, res: Response): Promise<void> => {
       })
     }
 
+    if (!user.verified) {
+      return res.render('auth/login', {
+        pageTitle: 'Login',
+        errors: { email: 'Email not verified' },
+        oldValue: {
+          password,
+          email,
+        },
+      })
+    }
+
     req.session!.isLoggedIn = true
     req.session!.user = user
     req.session!.save(() => {
@@ -144,4 +177,30 @@ const logout = (req: Request, res: Response): void => {
   })
 }
 
-export { getSignup, postSignup, getLogin, postLogin, logout }
+const getVerify = (req: Request, res: Response): void => {
+  res.render('verify', {
+    pageTitle: 'Verify',
+  })
+}
+
+const verify = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const token = req.params.token
+    const decoded = verifyToken(token)
+    if (!decoded) return res.redirect('/')
+
+    const user = await User.findOne({ email: decoded.payload })
+
+    if (!user) return res.redirect('/')
+
+    user.verified = true
+
+    await user.save()
+
+    res.redirect('/auth/login')
+  } catch (e) {
+    res.redirect('/')
+  }
+}
+
+export { getSignup, postSignup, getLogin, postLogin, logout, getVerify, verify }

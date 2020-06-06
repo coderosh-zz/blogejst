@@ -6,8 +6,11 @@ import {
   getSignup,
   postSignup,
   logout,
+  verify,
+  getVerify,
 } from '../controllers/auth'
 import isAuth from '../middlewares/isAuth'
+import notAuth from '../middlewares/notAuth'
 
 const router = Router()
 
@@ -49,5 +52,9 @@ router
   )
 
 router.route('/logout').post(isAuth, logout)
+
+router.route('/verify').get(notAuth, getVerify)
+
+router.route('/verify/:token').get(notAuth, verify)
 
 export default router

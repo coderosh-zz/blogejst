@@ -10,6 +10,7 @@
     "lint": "eslint . --fix --ext .ts"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.1.1",
     "bcryptjs": "^2.4.3",
     "dompurify": "^2.0.11",
     "dotenv": "^8.2.0",
@@ -19,8 +20,10 @@
     "express-validator": "^6.5.0",
     "gravatar": "^1.8.0",
     "jsdom": "^16.2.2",
+    "jsonwebtoken": "^8.5.1",
     "marked": "^1.1.0",
     "mongoose": "^5.9.17",
+    "nodemailer": "^6.4.8",
     "slugify": "^1.4.0",
     "socket.io": "^2.3.0"
   },
@@ -31,8 +34,10 @@
     "@types/express-session": "^1.17.0",
     "@types/gravatar": "^1.8.1",
     "@types/jsdom": "^16.2.3",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/marked": "^0.7.4",
     "@types/mongoose": "^5.7.21",
+    "@types/nodemailer": "^6.4.0",
     "@types/socket.io": "^2.1.8",
     "@typescript-eslint/eslint-plugin": "^3.1.0",
     "@typescript-eslint/parser": "^3.1.0",

@@ -1,12 +1,14 @@
 # BLOGEJST
 
-- Nodejs markdown blog
+> Nodejs markdown blog
 
 - NodeJs
 - EJS
 - Mongoose
 - Typescript
 - Markdown
+- NodeMailer
+- Gravatar
 
 **Signup**
 ![Signup](/screenshots/signup.png)

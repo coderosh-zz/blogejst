@@ -1,0 +1,46 @@
+<%- include ('./includes/header.ejs') %>
+
+<style>
+    .box {
+        text-align: center;
+        background: #b3a39e;
+        padding: 20px 10px;
+        margin: 20px 0;
+        color: #292828;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .email {
+        font-size: 15px;
+    }
+
+    .info {
+        font-size: 18px;
+        margin-top: 30px;
+    }
+
+    .link {
+        color: #292828;
+        text-decoration: underline;
+        display: block;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="box">
+        <h3 class="title">Verification link sent to
+        </h3>
+        <div class="email">
+            jokersofnepal@gmail.com
+        </div>
+        <h5 class="info">Please check your email</h5>
+
+        <a class="link" href="/auth/login">Login</a>
+    </div>
+</div>
+
+<%- include ('./includes/footer.ejs') %>

@@ -10,6 +10,7 @@ interface IUser extends Document {
   avatar: string
   posts: any[]
   comments: any[]
+  verified: boolean
 }
 
 const userSchema = new Schema(
@@ -32,6 +33,10 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
     posts: [
       {
