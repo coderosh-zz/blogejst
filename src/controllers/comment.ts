@@ -60,14 +60,14 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
 
 const editComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const deletedBy = await User.findById(req.session!.user._id)
+    const editedBy = await User.findById(req.session!.user._id)
     const post = await Post.findById(req.params.post).populate('author')
 
-    if (!deletedBy || !post) return res.redirect('/')
+    if (!editedBy || !post) return res.redirect('/')
 
     const comment = await Comment.findById(req.params.id)
 
-    if (!comment || !deletedBy.comments.includes(comment.id)) {
+    if (!comment || !editedBy.comments.includes(comment.id)) {
       return res.redirect('/')
     }
 
