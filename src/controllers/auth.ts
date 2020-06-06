@@ -78,6 +78,8 @@ const postSignup = async (req: Request, res: Response): Promise<void> => {
 
     await User.create({ name, email, password: hashedPassword })
 
+    req.flash('visitVerify', JSON.stringify([true, email]))
+
     res.redirect('/auth/verify')
 
     await sendMail({
@@ -178,8 +180,13 @@ const logout = (req: Request, res: Response): void => {
 }
 
 const getVerify = (req: Request, res: Response): void => {
+  const email = req.flash('visitVerify')[0]
+  if (!email) {
+    return res.redirect('/')
+  }
   res.render('verify', {
     pageTitle: 'Verify',
+    email,
   })
 }
 

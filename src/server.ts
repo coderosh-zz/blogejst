@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import session from 'express-session'
+import flash from 'connect-flash'
 
 import connectDB from './config/db'
 import authRouter from './routes/auth'
@@ -22,6 +23,8 @@ app.use(
     cookie: { secure: false },
   })
 )
+
+app.use(flash())
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session!.isLoggedIn
