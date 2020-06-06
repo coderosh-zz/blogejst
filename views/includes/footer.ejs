@@ -6,7 +6,19 @@
     </div>
 </footer>
 
+
 <script src="/js/prism.js"></script>
+<script>
+    document.querySelector('#side-toggle').addEventListener('click', e => {
+        document.querySelector('#nav-items').classList.toggle('show-bar')
+        document.querySelector('#back').classList.toggle('back')
+    })
+    document.querySelector('#back').addEventListener('click', e => {
+        document.querySelector('#back').classList.remove('back')
+        document.querySelector('#nav-items').classList.remove('show-bar')
+    })
+
+</script>
 
 </body>
 

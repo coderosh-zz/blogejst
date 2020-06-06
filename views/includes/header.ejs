@@ -11,10 +11,12 @@
 
 <body>
     <div>
-
         <nav id="navbar">
+            <div id="back"></div>
+
             <div class="container">
                 <div class="logo"><a href="/">Blogejst</a></div>
+                <div id="side-toggle">&#9776;</div>
                 <ul id="nav-items">
                     <% if (!isAuthenticated) { %>
                     <li class="nav-item"><a href="/auth/login">Login</a></li>

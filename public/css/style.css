@@ -249,6 +249,7 @@ footer {
 
 .blog-content img {
   max-height: 400px;
+  max-width: 90%;
 }
 
 blockquote {
@@ -371,4 +372,62 @@ blockquote {
 
 .highlight {
   border: 1px solid crimson;
+}
+
+#side-toggle {
+  color: #f4f4f4;
+  cursor: pointer;
+  display: none;
+  font-size: 30px;
+}
+
+#back {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  z-index: 10;
+}
+
+.back {
+  display: block !important;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+@media (max-width: 600px) {
+  #nav-items {
+    position: fixed;
+    width: 300px;
+    height: 100vh;
+    right: -100%;
+    top: 0;
+    background-color: #291e1a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    z-index: 20;
+  }
+
+  .nav-item {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-item a {
+    display: block;
+    padding: 20px 0;
+    margin: 5px 0;
+  }
+
+  .show-bar {
+    right: 0 !important;
+  }
+
+  #side-toggle {
+    display: block;
+  }
 }
