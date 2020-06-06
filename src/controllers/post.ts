@@ -4,6 +4,7 @@ import slug from '../utils/slug'
 import Post from '../models/Post'
 import errsToObj from '../utils/errstoobj'
 import User from '../models/User'
+import Comment from '../models/Comment'
 
 const getAllPosts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -44,7 +45,9 @@ const getSinglePost = async (req: Request, res: Response): Promise<void> => {
     const post = await Post.findOne({
       author: user.id,
       slug: req.params.slug,
-    }).populate('author')
+    })
+      .populate('author')
+      .populate({ path: 'comments', populate: { path: 'user', model: 'User' } })
 
     if (!post) {
       return res.redirect('/')
@@ -225,6 +228,20 @@ const deletePost = async (req: Request, res: Response): Promise<void> => {
     if (post.author != req.session!.user._id) {
       return res.redirect('/')
     }
+
+    const deletedComments = await Comment.find({ post: post.id }).populate(
+      'user'
+    )
+
+    deletedComments.forEach(async (comment) => {
+      const user = await User.findById(comment.user._id)
+      if (user) {
+        user.comments.filter((cmt) => cmt != comment.id)
+        await user.save()
+      }
+    })
+
+    await Comment.deleteMany({ post: post.id })
 
     await Post.deleteOne({ _id: req.params.id })
 

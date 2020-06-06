@@ -9,6 +9,7 @@ interface IUser extends Document {
   password: string
   avatar: string
   posts: any[]
+  comments: any[]
 }
 
 const userSchema = new Schema(
@@ -38,6 +39,7 @@ const userSchema = new Schema(
         ref: 'Post',
       },
     ],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: true,

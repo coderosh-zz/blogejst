@@ -1,72 +1,6 @@
 <%- include('./includes/header.ejs') %>
-<style>
-    .blog-title {
-        margin: 10px 0;
-    }
 
-    .blog-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 10px 0;
-    }
-
-    .blog-info-author {
-        display: flex;
-        align-items: center;
-        color: #1d1c1c;
-    }
-
-    .blog-author-img {
-        width: 50px;
-        height: 50px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-
-    .blog-author-img img {
-        width: 50px
-    }
-
-    .blog-content {
-        margin: 20px 0;
-        overflow-x: hidden;
-    }
-
-    .blog-content a {
-        color: brown;
-        text-decoration: underline;
-    }
-
-    .blog-content img {
-        max-height: 400px;
-    }
-
-    blockquote {
-        background: #af7c7cc0;
-        border-left: 5px solid brown;
-        padding: 15px 10px;
-    }
-
-    .buttons {
-        display: flex;
-        align-items: center;
-    }
-
-    .buttons button,
-    .buttons a {
-        margin-top: 5px;
-        padding: 0px 10px;
-        border: 1px solid #888;
-        color: #111111;
-        display: inline-block;
-        margin-right: 10px;
-        background-color: #f4f4f4;
-        line-height: 30px;
-        font-size: 16px;
-    }
-</style>
+<div style="display: none;" class="backdrop"></div>
 
 <div class="container">
     <% if (isAuthenticated && user._id == post.author._id) { %>
@@ -91,14 +25,78 @@
                 </div>
             </div>
         </a>
-        <div class="blof-info-date">
+        <div class="blog-info-date">
             <%= post.createdAt.toDateString() %>
         </div>
     </div>
     <hr>
     <hr>
     <div class="blog-content"><%- post.html %></div>
+    <div class="blog-comment">
+        <h2 style="text-align: center;">COMMENTS</h2>
+        <div class="comment-form">
+            <form id="commentform" action="/comment/<%= post._id %>" method="POST">
+                <div class="form-control">
+                    <input type="text" name="comment" placeholder="Your comment ..." autocomplete="off"
+                        <%= !isAuthenticated && 'disabled' %>>
+                    <%- isAuthenticated && `<button type="submit" class="form-submit">Comment</button>` %>
+                </div>
+            </form>
+        </div>
+        <div class="comments">
+            <% post.comments.forEach(comment => { %>
+            <div class="comment <%= user && comment.user._id == user._id ? 'highlight': '' %> ">
+                <div class="img">
+                    <a href="/@<%= comment.user.username %>">
+                        <img src="<%= comment.user.avatar %>">
+                    </a>
+                </div>
+                <div class="user_text">
+                    <div class="user_name">
+                        <a href="/@<%= comment.user.username %>" style="color: #111111;">
+                            <%= comment.user.name %>
+                        </a>
+                    </div>
+                    <div class="user_text"><%= comment.comment %></div>
+                    <% if ( user && comment.user._id == user._id) { %>
+                    <div class="action-buttons">
+                        <form action="/comment/delete/<%= post._id %>/<%= comment._id %>" method="POST">
+                            <button class="link-btn" type="submit">Delete</button>
+                        </form>
+                        <button class="link-btn toggle-form">Edit</button>
+                        <div id="#edit-form" class="modal">
+                            <form action="/comment/edit/<%= post._id %>/<%= comment._id %>" method="POST">
+                                <h4 style="text-align: center;">Edit Comment</h4>
+                                <div class="form-control">
+                                    <input type="text" autocomplete="off" name="comment" value="<%= comment.comment %>">
+                                    <button class="form-submit" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+
+    </div>
 </div>
 
+<script>
+    document.querySelectorAll('.toggle-form').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault()
+            btn.parentElement.querySelector('.modal').classList.add('show-modal')
+            document.querySelector('.backdrop').style.display = 'block'
+        })
+
+        document.querySelector('.backdrop').addEventListener('click', e => {
+            btn.parentElement.querySelector('.modal').classList.remove('show-modal')
+            document.querySelector('.backdrop').style.display = 'none'
+        })
+    })
+
+</script>
 
 <%- include('./includes/footer.ejs') %>

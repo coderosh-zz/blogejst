@@ -6,6 +6,7 @@ import connectDB from './config/db'
 import authRouter from './routes/auth'
 import postRouter from './routes/post'
 import userRouter from './routes/user'
+import commentRouter from './routes/comment'
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/auth', authRouter)
+app.use('/comment', commentRouter)
 app.use(postRouter)
 app.use(userRouter)
 

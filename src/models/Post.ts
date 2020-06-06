@@ -13,6 +13,7 @@ interface IPost extends Document {
   slug: string
   html: string
   author: any
+  comments: any[]
 }
 
 const postSchema = new Schema(
@@ -40,6 +41,7 @@ const postSchema = new Schema(
       ref: 'User',
       required: true,
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: true,

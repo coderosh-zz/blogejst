@@ -10,25 +10,26 @@
 </head>
 
 <body>
+    <div>
 
-    <nav id="navbar">
-        <div class="container">
-            <div class="logo"><a href="/">Blogejst</a></div>
-            <ul id="nav-items">
-                <% if (!isAuthenticated) { %>
-                <li class="nav-item"><a href="/auth/login">Login</a></li>
-                <li class="nav-item"><a href="/auth/signup">Signup</a></li>
-                <% }else { %>
-                <li class="nav-item"><a href="/create">Create</a></li>
-                <li class="nav-item"><a href="/me">Profile</a></li>
-                <li class="nav-item">
-                    <form action="/auth/logout" method="POST">
-                        <button type="submit">
-                            Logout
-                        </button>
-                    </form>
-                </li>
-                <% } %>
-            </ul>
-        </div>
-    </nav>
+        <nav id="navbar">
+            <div class="container">
+                <div class="logo"><a href="/">Blogejst</a></div>
+                <ul id="nav-items">
+                    <% if (!isAuthenticated) { %>
+                    <li class="nav-item"><a href="/auth/login">Login</a></li>
+                    <li class="nav-item"><a href="/auth/signup">Signup</a></li>
+                    <% }else { %>
+                    <li class="nav-item"><a href="/create">Create</a></li>
+                    <li class="nav-item"><a href="/me">Profile</a></li>
+                    <li class="nav-item">
+                        <form action="/auth/logout" method="POST">
+                            <button type="submit">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </nav>

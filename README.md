@@ -22,3 +22,9 @@
 
 **Profile**
 ![Profile](/screenshots/profile.png)
+
+**Comment**
+![Comment](/screenshots/comment.png)
+
+**Edit Comment**
+![Edit Comment](./screenshots/editcomment.png)
