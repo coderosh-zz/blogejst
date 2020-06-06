@@ -30,3 +30,9 @@
 
 **Edit Comment**
 ![Edit Comment](./screenshots/editcomment.png)
+
+**Verify Page**
+![Verify](./screenshots/verify-page.png)
+
+**Email Verification**
+![Email](./screenshots/verify-mail.png)
