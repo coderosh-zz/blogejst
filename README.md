@@ -36,3 +36,12 @@
 
 **Email Verification**
 ![Email](./screenshots/verify-mail.png)
+
+**Forgot Password**
+![FORGOT](./screenshots/forget-page.png)
+
+**Reset mail**
+![FORGOT](./screenshots/reset-email.png)
+
+**Reset Password**
+![RESET](./screenshots/reset-page.png)

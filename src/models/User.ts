@@ -11,6 +11,7 @@ interface IUser extends Document {
   posts: any[]
   comments: any[]
   verified: boolean
+  reset: boolean
 }
 
 const userSchema = new Schema(
@@ -35,6 +36,10 @@ const userSchema = new Schema(
       required: true,
     },
     verified: {
+      type: Boolean,
+      default: false,
+    },
+    reset: {
       type: Boolean,
       default: false,
     },

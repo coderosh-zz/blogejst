@@ -101,6 +101,7 @@ const getLogin = (req: Request, res: Response): void => {
   res.render('auth/login', {
     pageTitle: 'Login',
     errors: {},
+    flashMsg: req.flash('login')[0],
     oldValue: {
       password: '',
       email: '',
@@ -210,4 +211,123 @@ const verify = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export { getSignup, postSignup, getLogin, postLogin, logout, getVerify, verify }
+const getForgetPassword = (req: Request, res: Response): void => {
+  res.render('forgetPassword', {
+    pageTitle: 'Forget Password',
+    errors: {},
+  })
+}
+
+const postForgetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const user = await User.findOne({ email: req.body.email })
+
+    if (!user) {
+      return res.render('forgetPassword', {
+        pageTitle: 'Forget Password',
+        errors: { email: 'Please enter correct email' },
+      })
+    }
+
+    user.reset = true
+
+    user.save()
+
+    req.flash('login', 'Password reset link is sent, please check your email')
+
+    res.redirect('/auth/login')
+
+    await sendMail({
+      to: user.email,
+      subject: 'Password reset link',
+      html: mailTemplate({
+        text: 'Click on the link below to reset your password',
+        button: 'RESET',
+        link: siteUrl(req) + `/auth/reset/${createToken(user.email)}`,
+        fullName: user.name,
+      }),
+    })
+  } catch (e) {
+    res.redirect('/')
+  }
+}
+
+const getResetPassword = async (req: Request, res: Response): Promise<void> => {
+  const decoded = verifyToken(req.params.token)
+
+  if (!decoded) return res.redirect('/')
+
+  const user = await User.findOne({ email: decoded.payload, reset: true })
+
+  if (!user) return res.redirect('/')
+
+  res.render('resetPassword', {
+    pageTitle: 'Reset Password',
+    token: req.params.token,
+    errors: {},
+  })
+}
+
+const postResetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const errors = validationResult(req)
+
+  const errs = errsToObj(errors)
+
+  if (!errors.isEmpty()) {
+    return res.render('resetPassword', {
+      pageTitle: 'Reset Password',
+      token: req.params.token,
+      errors: errs,
+    })
+  }
+
+  if (req.body.password != req.body.confirmPassword) {
+    return res.render('resetPassword', {
+      pageTitle: 'Reset Password',
+      token: req.params.token,
+      errors: { confirmPassword: 'Passwords do not match' },
+    })
+  }
+
+  const decoded = verifyToken(req.params.token)
+
+  if (!decoded) return res.redirect('/')
+
+  const user = await User.findOne({ email: decoded.payload, reset: true })
+
+  if (!user) return res.redirect('/')
+
+  const hashedPassword = await hash(req.body.password, 10)
+
+  user.password = hashedPassword
+
+  user.reset = false
+
+  user.verified = true
+
+  await user.save()
+
+  req.flash('login', 'Password reset successful')
+
+  res.redirect('/auth/login')
+}
+
+export {
+  getSignup,
+  postSignup,
+  getLogin,
+  postLogin,
+  logout,
+  getVerify,
+  verify,
+  getForgetPassword,
+  postForgetPassword,
+  getResetPassword,
+  postResetPassword,
+}

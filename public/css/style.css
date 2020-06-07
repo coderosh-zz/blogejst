@@ -407,11 +407,12 @@ blockquote {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s;
+    transition: all 0.1s;
     z-index: 20;
   }
 
-  .nav-item {
+  .nav-item,
+  .nav-item form button {
     display: block;
     width: 100%;
     text-align: center;
@@ -421,6 +422,11 @@ blockquote {
     display: block;
     padding: 20px 0;
     margin: 5px 0;
+  }
+  .nav-item a:hover,
+  .nav-item button:hover {
+    background-color: transparent;
+    color: crimson;
   }
 
   .show-bar {

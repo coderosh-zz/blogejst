@@ -8,6 +8,10 @@ import {
   logout,
   verify,
   getVerify,
+  getForgetPassword,
+  postForgetPassword,
+  getResetPassword,
+  postResetPassword,
 } from '../controllers/auth'
 import isAuth from '../middlewares/isAuth'
 import notAuth from '../middlewares/notAuth'
@@ -56,5 +60,24 @@ router.route('/logout').post(isAuth, logout)
 router.route('/verify').get(notAuth, getVerify)
 
 router.route('/verify/:token').get(notAuth, verify)
+
+router.route('/forget').get(getForgetPassword).post(postForgetPassword)
+
+router
+  .route('/reset/:token')
+  .get(getResetPassword)
+  .post(
+    [
+      check('password')
+        .trim()
+        .notEmpty()
+        .withMessage('Please enter your password'),
+      check('confirmPassword')
+        .trim()
+        .notEmpty()
+        .withMessage('Please confirm your password'),
+    ],
+    postResetPassword
+  )
 
 export default router
