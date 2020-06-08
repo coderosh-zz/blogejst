@@ -4,6 +4,7 @@ import session from 'express-session'
 import flash from 'connect-flash'
 
 import connectDB from './config/db'
+import socketIo from './utils/socket'
 import authRouter from './routes/auth'
 import postRouter from './routes/post'
 import userRouter from './routes/user'
@@ -39,7 +40,9 @@ app.use(userRouter)
 
 const PORT = process.env.PORT || 4000
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`)
   })
+
+  socketIo.init(server)
 })

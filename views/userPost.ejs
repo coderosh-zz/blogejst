@@ -35,7 +35,7 @@
     <div class="form-title"><%= userPost.username %>'s Posts</div>
     <div class="blog-items">
         <% userPost.posts.forEach(post => { %>
-        <a href="/@<%= userPost.username %>/<%= post.slug %>">
+        <a id="post-<%= post._id %>" href="/@<%= userPost.username %>/<%= post.slug %>">
             <div class="blog-item">
                 <div class="blog-item-title"><%= post.title %> </div>
                 <div class="blog-item-date-author">
@@ -52,5 +52,33 @@
     </div>
 </div>
 
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socketIO = io('/')
+
+    socketIO.on('postUpdate', payload => {
+        const post = document.querySelector(`#post-${payload._id}`)
+        if (post) {
+            post.innerHTML = `
+        
+         <div class="blog-item">
+                <div class="blog-item-title">${payload.title}</div>
+                <div class="blog-item-date-author">
+                    <span>
+                        <img src="${payload.author.avatar}" alt="user_gravatar">
+                        ${payload.author.name}
+                    </span>
+                    <span>${new Date(`${payload.createdAt}`).toDateString()} </span>
+                </div>
+                <div class="blog-item-description">${payload.description}</div>
+            </div>
+         
+         `
+            post.href = `@${payload.author.username}/${payload.slug}`
+        }
+    })
+</script>
 
 <%- include('./includes/footer.ejs') %>

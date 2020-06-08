@@ -40,6 +40,7 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
 
     user.name = name
     user.username = username
+
     await user.save()
 
     req.session!.isLoggedIn = true

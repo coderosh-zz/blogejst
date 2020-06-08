@@ -45,7 +45,8 @@
         </div>
         <div class="comments">
             <% post.comments.forEach(comment => { %>
-            <div class="comment <%= user && comment.user._id == user._id ? 'highlight': '' %> ">
+            <div id="comment-<%= comment._id %>"
+                class="comment <%= user && comment.user._id == user._id ? 'highlight': '' %> ">
                 <div class="img">
                     <a href="/@<%= comment.user.username %>">
                         <img src="<%= comment.user.avatar %>">
@@ -60,12 +61,14 @@
                     <div class="user_text"><%= comment.comment %></div>
                     <% if ( user && comment.user._id == user._id) { %>
                     <div class="action-buttons">
-                        <form action="/comment/delete/<%= post._id %>/<%= comment._id %>" method="POST">
+                        <form id="deleteCommentForm" action="/comment/delete/<%= post._id %>/<%= comment._id %>"
+                            method="POST">
                             <button class="link-btn" type="submit">Delete</button>
                         </form>
                         <button class="link-btn toggle-form">Edit</button>
                         <div id="#edit-form" class="modal">
-                            <form action="/comment/edit/<%= post._id %>/<%= comment._id %>" method="POST">
+                            <form id="commentEditForm" action="/comment/edit/<%= post._id %>/<%= comment._id %>"
+                                method="POST">
                                 <h4 style="text-align: center;">Edit Comment</h4>
                                 <div class="form-control">
                                     <input type="text" autocomplete="off" name="comment" value="<%= comment.comment %>">
@@ -83,7 +86,52 @@
     </div>
 </div>
 
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+
 <script>
+
+    document.querySelector('#commentform').addEventListener('submit', e => {
+        e.preventDefault()
+
+        if (e.target.comment.value.trim() === "") return
+
+        fetch(e.target.action, {
+            method: 'POST',
+            body: new URLSearchParams({
+                "comment": e.target.comment.value
+            }),
+        })
+
+        e.target.comment.value = ""
+    })
+
+    document.querySelectorAll('#deleteCommentForm').forEach(form => {
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+
+            fetch(e.target.action, {
+                method: 'POST',
+            })
+        })
+    })
+
+    document.querySelectorAll("#commentEditForm").forEach(form => {
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            form.parentElement.classList.remove('show-modal')
+            document.querySelector('.backdrop').style.display = 'none'
+            fetch(e.target.action, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    "comment": e.target.comment.value
+                }),
+            })
+        })
+    })
+
     document.querySelectorAll('.toggle-form').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault()
@@ -95,6 +143,101 @@
             btn.parentElement.querySelector('.modal').classList.remove('show-modal')
             document.querySelector('.backdrop').style.display = 'none'
         })
+    })
+
+    const socketIO = io('/')
+
+    socketIO.on('postUpdate', payload => {
+        if (payload._id == "<%= post._id %>") {
+            document.querySelector('.blog-content').innerHTML = payload.html
+            document.querySelector(".blog-title h1").innerHTML = payload.title
+            history.pushState(null, null, `/@${payload.author.username}/${payload._id}`)
+            document.title = `${payload.title} | Blogejst`
+        }
+    })
+
+
+    socketIO.on('commentDeleted', ({ comment }) => {
+        const cmt = document.querySelector(`#comment-${comment._id}`)
+
+        if (!cmt) return
+        cmt.innerHTML = ''
+        cmt.style.display = 'none'
+    })
+
+    socketIO.on('commentEdited', ({ comment }) => {
+        const cmt = document.querySelector(`#comment-${comment._id}`)
+
+        cmt.querySelector('.user_text .user_text').innerHTML = comment.comment
+    })
+
+    socketIO.on('commentCreated', ({ author, comment }) => {
+        const comments = document.querySelector('.comments')
+        const cmt = document.createElement('div')
+        cmt.id = `comment-${comment._id}`
+        cmt.className = `comment <% if(user){%> ${author._id == "<%= user._id %>" ? 'highlight' : ''}  <% } %>`
+
+        cmt.innerHTML = `
+          
+                <div class="img">
+                    <a href="/@${author.username}">
+                        <img src="${author.avatar}">
+                    </a>
+                </div>
+                <div class="user_text">
+                    <div class="user_name">
+                        <a href="/@${author.username}" style="color: #111111;">
+                            ${author.name}
+                        </a>
+                    </div>
+                    <div class="user_text">${comment.comment}</div>
+                    <% if ( user) { %>
+                        ${"<%= user._id %>" == author._id ? `
+                            <div class="action-buttons">
+                                <form id="deleteCommentForm" action="/comment/delete/<%= post._id %>/${comment._id}" method="POST">
+                                    <button class="link-btn" type="submit">Delete</button>
+                                </form>
+                                <button class="link-btn toggle-form">Edit</button>
+                                <div id="#edit-form" class="modal">
+                                    <form action="/comment/edit/<%= post._id %>/${comment._id}" method="POST">
+                                        <h4 style="text-align: center;">Edit Comment</h4>
+                                        <div class="form-control">
+                                            <input type="text" autocomplete="off" name="comment" value="${comment.comment}">
+                                            <button class="form-submit" type="submit">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        `: ""}
+                    <% } %>
+                </div>
+        `
+
+        const btn = cmt.querySelector('.toggle-form')
+
+        btn && btn.addEventListener('click', e => {
+            e.preventDefault()
+            btn.parentElement.querySelector('.modal') && btn.parentElement.querySelector('.modal').classList.add('show-modal')
+            document.querySelector('.backdrop').style.display = 'block'
+        })
+
+        document.querySelector('.backdrop').addEventListener('click', e => {
+            cmt.querySelector('.modal') && cmt.querySelector('.modal').classList.remove('show-modal')
+            document.querySelector('.backdrop').style.display = 'none'
+        })
+
+        const deleteForm = cmt.querySelector('#deleteCommentForm')
+        if (deleteForm) {
+            deleteForm.addEventListener('submit', e => {
+                e.preventDefault()
+
+                fetch(e.target.action, {
+                    method: 'POST',
+                })
+            })
+        }
+
+        comments.prepend(cmt)
     })
 
 </script>

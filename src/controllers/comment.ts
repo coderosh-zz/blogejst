@@ -3,6 +3,7 @@ import User from '../models/User'
 import { validationResult } from 'express-validator'
 import Comment from '../models/Comment'
 import Post from '../models/Post'
+import socketIo from '../utils/socket'
 
 const createComment = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -22,10 +23,13 @@ const createComment = async (req: Request, res: Response): Promise<void> => {
       comment: req.body.comment,
     })
 
-    createdBy!.comments.push(comment.id)
-    post!.comments.push(comment.id)
+    createdBy!.comments.unshift(comment.id)
+    post!.comments.unshift(comment.id)
     await createdBy.save()
     await post.save()
+
+    socketIo.getIo().emit('commentCreated', { comment, author: createdBy })
+
     res.redirect(`/@${post.author.username}/${post.slug}`)
   } catch (e) {
     res.redirect('/')
@@ -52,6 +56,8 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     await post.save()
     await deletedBy.save()
 
+    socketIo.getIo().emit('commentDeleted', { comment })
+
     res.redirect(`/@${post.author.username}/${post.slug}`)
   } catch (e) {
     res.redirect('/')
@@ -73,6 +79,7 @@ const editComment = async (req: Request, res: Response): Promise<void> => {
 
     comment.comment = req.body.comment
     await comment.save()
+    socketIo.getIo().emit('commentEdited', { comment })
     res.redirect(`/@${post.author.username}/${post.slug}`)
   } catch (e) {
     res.redirect('/')
