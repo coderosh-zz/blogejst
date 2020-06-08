@@ -48,7 +48,10 @@ const getSinglePost = async (req: Request, res: Response): Promise<void> => {
       slug: req.params.slug,
     })
       .populate('author')
-      .populate({ path: 'comments', populate: { path: 'user', model: 'User' } })
+      .populate({
+        path: 'comments',
+        populate: { path: 'user', model: 'User' },
+      })
 
     if (!post) {
       return res.redirect('/')
