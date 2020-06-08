@@ -75,6 +75,38 @@
 
     const socketIO = io('/')
 
+    socketIO.on('postDelete', payload => {
+        const post = document.querySelector(`#post-${payload._id}`)
+        if (post) {
+            post.innerHTML = ''
+            post.style.display = 'none'
+        }
+    })
+
+    socketIO.on('postCreated', ({ post, author }) => {
+        const postEl = document.createElement('a')
+        postEl.href = `@${author.username}/${post.slug}`
+        postEl.id = `post-${post._id}`
+
+        postEl.innerHTML = `
+        
+         <div class="blog-item">
+                <div class="blog-item-title">${post.title}</div>
+                <div class="blog-item-date-author">
+                    <span>
+                        <img src="${author.avatar}" alt="user_gravatar">
+                        ${author.name}
+                    </span>
+                    <span>${new Date(`${post.createdAt}`).toDateString()} </span>
+                </div>
+                <div class="blog-item-description">${post.description}</div>
+            </div>
+         
+         `
+
+        document.querySelector('.blog-items').prepend(postEl)
+    })
+
     socketIO.on('postUpdate', payload => {
         const post = document.querySelector(`#post-${payload._id}`)
         if (post) {

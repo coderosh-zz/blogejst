@@ -147,11 +147,17 @@
 
     const socketIO = io('/')
 
+    socketIO.on('postDelete', payload => {
+        if (payload._id == "<%= post._id %>" && "<%= isAuthenticated %>" != "true") {
+            location.href = '/'
+        }
+    })
+
     socketIO.on('postUpdate', payload => {
         if (payload._id == "<%= post._id %>") {
             document.querySelector('.blog-content').innerHTML = payload.html
             document.querySelector(".blog-title h1").innerHTML = payload.title
-            history.pushState(null, null, `/@${payload.author.username}/${payload._id}`)
+            history.pushState(null, null, `/@${payload.author.username}/${payload.slug}`)
             document.title = `${payload.title} | Blogejst`
         }
     })

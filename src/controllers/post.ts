@@ -155,6 +155,8 @@ const postCreatePost = async (req: Request, res: Response): Promise<void> => {
     author!.posts.push(createdPost.id)
     await author!.save()
 
+    socketIo.getIo().emit('postCreated', { post: createdPost, author: author })
+
     res.redirect(`/@${req.session!.user.username}/${titleSlug}`)
   } catch (e) {
     res.redirect('/')
