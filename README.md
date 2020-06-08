@@ -7,7 +7,7 @@
 - Mongoose
 - Typescript
 - Markdown
-- NodeMailer
+- Nodemailer
 - Gravatar
 
 **Signup**
