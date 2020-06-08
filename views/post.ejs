@@ -83,6 +83,11 @@
     </div>
 </div>
 
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+
 <script>
     document.querySelectorAll('.toggle-form').forEach(btn => {
         btn.addEventListener('click', e => {
@@ -95,6 +100,17 @@
             btn.parentElement.querySelector('.modal').classList.remove('show-modal')
             document.querySelector('.backdrop').style.display = 'none'
         })
+    })
+
+    const socketIO = io('/')
+
+    socketIO.on('postUpdate', payload => {
+        if (payload._id == "<%= post._id %>") {
+            document.querySelector('.blog-content').innerHTML = payload.html
+            document.querySelector(".blog-title h1").innerHTML = payload.title
+            history.pushState(null, null, `/@${payload.author.username}/${payload._id}`)
+            document.title = `${payload.title} | Blogejst`
+        }
     })
 
 </script>

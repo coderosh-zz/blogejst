@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import slug from '../utils/slug'
+import socketIo from '../utils/socket'
 import Post from '../models/Post'
 import errsToObj from '../utils/errstoobj'
 import User from '../models/User'
@@ -176,13 +177,13 @@ const postEditPost = async (req: Request, res: Response): Promise<void> => {
       })
     }
 
-    const post = await Post.findById(req.params.id)
+    const post = await Post.findById(req.params.id).populate('author')
 
     if (!post) {
       return res.redirect('/')
     }
 
-    if (post.author != req.session!.user._id) {
+    if (post.author._id != req.session!.user._id) {
       return res.redirect('/')
     }
 
@@ -209,10 +210,14 @@ const postEditPost = async (req: Request, res: Response): Promise<void> => {
     post.slug = titleSlug
     post.description = description
     post.body = body
+
     await post.save()
+
+    socketIo.getIo().emit('postUpdate', post)
 
     res.redirect(`/@${req.session!.user.username}/${titleSlug}`)
   } catch (e) {
+    console.log(e)
     res.redirect('/')
   }
 }
@@ -250,6 +255,8 @@ const deletePost = async (req: Request, res: Response): Promise<void> => {
     author!.posts = author!.posts.filter((post) => post != req.params.id)
 
     await author!.save()
+
+    socketIo.getIo().emit('postDelete', post)
 
     res.redirect('/me')
   } catch (e) {
