@@ -61,7 +61,8 @@
                     <div class="user_text"><%= comment.comment %></div>
                     <% if ( user && comment.user._id == user._id) { %>
                     <div class="action-buttons">
-                        <form action="/comment/delete/<%= post._id %>/<%= comment._id %>" method="POST">
+                        <form id="deleteCommentForm" action="/comment/delete/<%= post._id %>/<%= comment._id %>"
+                            method="POST">
                             <button class="link-btn" type="submit">Delete</button>
                         </form>
                         <button class="link-btn toggle-form">Edit</button>
@@ -106,6 +107,16 @@
         e.target.comment.value = ""
     })
 
+    document.querySelectorAll('#deleteCommentForm').forEach(form => {
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+
+            fetch(e.target.action, {
+                method: 'POST',
+            })
+        })
+    })
+
     document.querySelectorAll('.toggle-form').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault()
@@ -137,6 +148,14 @@
     //     }
     // })
 
+    socketIO.on('commentDeleted', ({ comment }) => {
+        const cmt = document.querySelector(`#comment-${comment._id}`)
+
+        if (!cmt) return
+        cmt.innerHTML = ''
+        cmt.style.display = 'none'
+    })
+
     socketIO.on('commentCreated', ({ author, comment }) => {
         const comments = document.querySelector('.comments')
         const cmt = document.createElement('div')
@@ -157,9 +176,9 @@
                     </div>
                     <div class="user_text">${comment.comment}</div>
                     <% if ( user) { %>
-                        ${comment.user == author._id ? `
+                        ${"<%= user._id %>" == author._id ? `
                             <div class="action-buttons">
-                                <form action="/comment/delete/<%= post._id %>/${comment._id}" method="POST">
+                                <form id="deleteCommentForm" action="/comment/delete/<%= post._id %>/${comment._id}" method="POST">
                                     <button class="link-btn" type="submit">Delete</button>
                                 </form>
                                 <button class="link-btn toggle-form">Edit</button>
@@ -182,13 +201,22 @@
 
         btn && btn.addEventListener('click', e => {
             e.preventDefault()
-            btn.parentElement.querySelector('.modal').classList.add('show-modal')
+            btn.parentElement.querySelector('.modal') && btn.parentElement.querySelector('.modal').classList.add('show-modal')
             document.querySelector('.backdrop').style.display = 'block'
         })
 
         document.querySelector('.backdrop').addEventListener('click', e => {
-            cmt.querySelector('.modal').classList.remove('show-modal')
+            cmt.querySelector('.modal') && cmt.querySelector('.modal').classList.remove('show-modal')
             document.querySelector('.backdrop').style.display = 'none'
+        })
+
+        const deleteForm = document.querySelector('#deleteCommentForm')
+        deleteForm && deleteForm.addEventListener('submit', e => {
+            e.preventDefault()
+
+            fetch(e.target.action, {
+                method: 'POST',
+            })
         })
 
         comments.prepend(cmt)

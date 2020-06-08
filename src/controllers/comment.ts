@@ -56,6 +56,8 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
     await post.save()
     await deletedBy.save()
 
+    socketIo.getIo().emit('commentDeleted', { comment })
+
     res.redirect(`/@${post.author.username}/${post.slug}`)
   } catch (e) {
     res.redirect('/')
