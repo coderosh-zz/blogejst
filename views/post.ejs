@@ -156,12 +156,6 @@
         }
     })
 
-    // socketIO.on('commentUpdated', payload => {
-    //     const comment = document.querySelector(`#comment-${payload._id}`)
-    //     if(comment){
-
-    //     }
-    // })
 
     socketIO.on('commentDeleted', ({ comment }) => {
         const cmt = document.querySelector(`#comment-${comment._id}`)
