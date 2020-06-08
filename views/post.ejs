@@ -156,11 +156,19 @@
         cmt.style.display = 'none'
     })
 
+    socketIO.on('commentEdited', ({ comment }) => {
+        const cmt = document.querySelector(`#comment-${comment._id}`)
+
+        cmt.querySelector('.user_text').innerHTML = comment.comment
+    })
+
     socketIO.on('commentCreated', ({ author, comment }) => {
         const comments = document.querySelector('.comments')
         const cmt = document.createElement('div')
         cmt.id = `comment-${comment._id}`
-        cmt.className = 'comment'
+
+        cmt.className = `comment <% if(user){%> ${author._id == "<% user._id %>" ? 'highlight' : ''}  <% } %>`
+
         cmt.innerHTML = `
           
                 <div class="img">
@@ -210,14 +218,16 @@
             document.querySelector('.backdrop').style.display = 'none'
         })
 
-        const deleteForm = document.querySelector('#deleteCommentForm')
-        deleteForm && deleteForm.addEventListener('submit', e => {
-            e.preventDefault()
+        const deleteForm = cmt.querySelector('#deleteCommentForm')
+        if (deleteForm) {
+            deleteForm.addEventListener('submit', e => {
+                e.preventDefault()
 
-            fetch(e.target.action, {
-                method: 'POST',
+                fetch(e.target.action, {
+                    method: 'POST',
+                })
             })
-        })
+        }
 
         comments.prepend(cmt)
     })

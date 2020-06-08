@@ -79,6 +79,7 @@ const editComment = async (req: Request, res: Response): Promise<void> => {
 
     comment.comment = req.body.comment
     await comment.save()
+    socketIo.getIo().emit('commentEdited', { comment })
     res.redirect(`/@${post.author.username}/${post.slug}`)
   } catch (e) {
     res.redirect('/')
