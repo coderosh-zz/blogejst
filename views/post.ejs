@@ -67,7 +67,8 @@
                         </form>
                         <button class="link-btn toggle-form">Edit</button>
                         <div id="#edit-form" class="modal">
-                            <form action="/comment/edit/<%= post._id %>/<%= comment._id %>" method="POST">
+                            <form id="commentEditForm" action="/comment/edit/<%= post._id %>/<%= comment._id %>"
+                                method="POST">
                                 <h4 style="text-align: center;">Edit Comment</h4>
                                 <div class="form-control">
                                     <input type="text" autocomplete="off" name="comment" value="<%= comment.comment %>">
@@ -117,6 +118,20 @@
         })
     })
 
+    document.querySelectorAll("#commentEditForm").forEach(form => {
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            form.parentElement.classList.remove('show-modal')
+            document.querySelector('.backdrop').style.display = 'none'
+            fetch(e.target.action, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    "comment": e.target.comment.value
+                }),
+            })
+        })
+    })
+
     document.querySelectorAll('.toggle-form').forEach(btn => {
         btn.addEventListener('click', e => {
             e.preventDefault()
@@ -159,15 +174,14 @@
     socketIO.on('commentEdited', ({ comment }) => {
         const cmt = document.querySelector(`#comment-${comment._id}`)
 
-        cmt.querySelector('.user_text').innerHTML = comment.comment
+        cmt.querySelector('.user_text .user_text').innerHTML = comment.comment
     })
 
     socketIO.on('commentCreated', ({ author, comment }) => {
         const comments = document.querySelector('.comments')
         const cmt = document.createElement('div')
         cmt.id = `comment-${comment._id}`
-
-        cmt.className = `comment <% if(user){%> ${author._id == "<% user._id %>" ? 'highlight' : ''}  <% } %>`
+        cmt.className = `comment <% if(user){%> ${author._id == "<%= user._id %>" ? 'highlight' : ''}  <% } %>`
 
         cmt.innerHTML = `
           
