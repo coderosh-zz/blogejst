@@ -9,6 +9,7 @@
 - Markdown
 - Nodemailer
 - Gravatar
+- Socket Io
 
 **Signup**
 ![Signup](/screenshots/signup.png)
