@@ -37,6 +37,12 @@ app.use('/comment', commentRouter)
 app.use(postRouter)
 app.use(userRouter)
 
+app.get('*', (req, res) => {
+  res.render('404', {
+    pageTitle: 'Page Not Found',
+  })
+})
+
 const PORT = process.env.PORT || 4000
 connectDB().then(() => {
   app.listen(PORT, () => {
