@@ -431,3 +431,42 @@ blockquote {
     display: block;
   }
 }
+
+/* 404 page design */
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+}
+.error__code {
+  font-size: 13rem;
+  margin: 0;
+  font-weight: 900;
+  letter-spacing: 20px;
+  /* background: url(Error.jpg) center no-repeat; */
+  color: rgb(243, 238, 235);
+}
+
+.error__message {
+  font-size: 23px;
+}
+
+.error__back {
+  margin-top: 10px;
+  text-decoration: none;
+  background: #7d7a7aaa;
+  color: #fff;
+  padding: 12px 24px;
+  display: inline-block;
+  border-radius: 25px;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: 0.4s;
+}
+
+.error__back:hover {
+  background: #222121;
+}
