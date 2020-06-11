@@ -4,7 +4,7 @@
   "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node ./dist/server.js",
+    "start": "node ./src/server.js",
     "build": "tsc",
     "develop": "ts-node-dev -r dotenv/config --transpileOnly --no-notify src/server.ts",
     "lint": "eslint . --fix --ext .ts"
